@@ -1,0 +1,112 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Game.StartMenuWindow"
+        Title="Start Menu"
+        Width="800"
+        Height="500"
+        Background="#ededed"
+        FontFamily="Arial"
+        WindowStartupLocation="CenterScreen">
+    
+    <!-- Ресурсы окна -->
+    <Window.Resources>
+        <ControlTheme x:Key="CustomButtonTheme" TargetType="Button">
+            <!-- Основные свойства кнопки -->
+            <Setter Property="Background" Value="#14151b"/>
+            <Setter Property="Foreground" Value="#ededed"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Arial"/> <!-- Указываем шрифт -->
+            <Setter Property="MinWidth" Value="120"/> <!-- Минимальная ширина кнопки -->
+            <Setter Property="MinHeight" Value="50"/> <!-- Минимальная высота кнопки -->
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+            <!-- Шаблон кнопки -->
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <!-- ContentPresenter для отображения содержимого кнопки -->
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          FontFamily="{TemplateBinding FontFamily}"
+                                          FontSize="{TemplateBinding FontSize}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <!-- Вложенные стили для состояний кнопки -->
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="#Fc3457"/>
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="#5e918a"/>
+            </Style>
+        </ControlTheme>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Основное меню -->
+        <StackPanel x:Name="MainMenuPanel" Spacing="20" Width="300" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel.RenderTransform>
+                <TranslateTransform/>
+            </StackPanel.RenderTransform>
+            <StackPanel.Transitions>
+                <Transitions>
+                    <!-- Анимация сдвига -->
+                    <DoubleTransition Property="TranslateTransform.X" Duration="0:0:0.5"/>
+                    <!-- Анимация прозрачности -->
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.5"/>
+                </Transitions>
+            </StackPanel.Transitions>
+            <Button Content="New Game" Theme="{StaticResource CustomButtonTheme}" Click="OnNewGameClick"/>
+            <Button Content="Game Mode" Theme="{StaticResource CustomButtonTheme}" Click="OnGameModeClick"/>
+            <Button Content="Difficulty Mode" Theme="{StaticResource CustomButtonTheme}" Click="Difficulty_Mode"/>
+            <Button Content="Help" Theme="{StaticResource CustomButtonTheme}"/>
+            <Button Content="About" Theme="{StaticResource CustomButtonTheme}"/>
+            <Button Content="Exit" Theme="{StaticResource CustomButtonTheme}" Click="OnExitClick"/>
+        </StackPanel>
+
+        <!-- Панель выбора режима игры -->
+        <StackPanel x:Name="GameModePanel" Spacing="20" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0" IsVisible="True">
+            <StackPanel.RenderTransform>
+                <TranslateTransform/>
+            </StackPanel.RenderTransform>
+            <StackPanel.Transitions>
+                <Transitions>
+                    <!-- Анимация сдвига -->
+                    <DoubleTransition Property="TranslateTransform.X" Duration="0:0:0.5"/>
+                    <!-- Анимация прозрачности -->
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.5"/>
+                </Transitions>
+            </StackPanel.Transitions>
+            <Button Content="Letters" Theme="{StaticResource CustomButtonTheme}" Click="OnFirstLetterClick"/>
+            <Button Content="Sentences" Theme="{StaticResource CustomButtonTheme}" Click="OnAnyLetterClick"/>
+            <Button Content="Back" Theme="{StaticResource CustomButtonTheme}" Click="OnBackClick"/>
+        </StackPanel>
+        
+        <StackPanel x:Name="DifficultyModePanel" Spacing="20" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0" IsVisible="False">
+            <StackPanel.RenderTransform>
+                <TranslateTransform/>
+            </StackPanel.RenderTransform>
+            <StackPanel.Transitions>
+                <Transitions>
+                    <!-- Анимация сдвига -->
+                    <DoubleTransition Property="TranslateTransform.X" Duration="0:0:0.5"/>
+                    <!-- Анимация прозрачности -->
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.5"/>
+                </Transitions>
+            </StackPanel.Transitions>
+            <Button Content="Easy" Theme="{StaticResource CustomButtonTheme}" Click="OnEasyMode" />
+            <Button Content="Medium" Theme="{StaticResource CustomButtonTheme}" Click="OnMediumMode"/>
+            <Button Content="Hard" Theme="{StaticResource CustomButtonTheme}" Click="OnHardMode"/>
+            <Button Content="Gradually" Theme="{StaticResource CustomButtonTheme}" Click="OnGradualyMode"/>
+            <Button Content="Back" Theme="{StaticResource CustomButtonTheme}" Click="OnBackClick" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,286 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Game"
+        xmlns:changeColor="clr-namespace:Game.ChangeColor"
+        x:Class="Game.MainWindow"
+        Title="Typing Game"
+        Width="800" Height="500"
+        KeyDown="Window_KeyDown"
+        Loaded="Window_Loaded">
+    
+
+    <Window.Resources>
+        <changeColor:ColorConverter x:Key="ColorConverter"/>
+         <ControlTheme x:Key="CustomButtonTheme" TargetType="Button">
+            <!-- Основные свойства кнопки -->
+            <Setter Property="Background" Value="#14151b"/>
+            <Setter Property="Foreground" Value="#ededed"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Arial"/> <!-- Указываем шрифт -->
+            <Setter Property="MinWidth" Value="120"/> <!-- Минимальная ширина кнопки -->
+            <Setter Property="MinHeight" Value="50"/> <!-- Минимальная высота кнопки -->
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+            <!-- Шаблон кнопки -->
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <!-- ContentPresenter для отображения содержимого кнопки -->
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          FontFamily="{TemplateBinding FontFamily}"
+                                          FontSize="{TemplateBinding FontSize}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <!-- Вложенные стили для состояний кнопки -->
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="#Fc3457"/>
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="#5e918a"/>
+            </Style>
+        </ControlTheme>
+    </Window.Resources>
+
+    <!-- Стили -->
+   <Window.Styles>
+        <!-- Стиль для текстовых блоков -->
+        <Style Selector="TextBlock.statsText">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Foreground" Value="#14151b"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5"/>
+        </Style>
+
+
+        <!-- Анимация для появления экрана завершения -->
+        <Style Selector="Grid#GameOverGrid">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="RenderTransform">
+                <TranslateTransform Y="-20"/>
+            </Setter>
+            <!-- Анимация -->
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.5"/>
+                </Transitions>
+            </Setter>
+        </Style>
+    </Window.Styles>
+    
+    
+    
+    <Grid>
+        <Grid x:Name="MainGameGrid">
+        <Canvas>
+            <Path Fill="#ededed">
+                <Path.Data>
+                    <RectangleGeometry Rect="0,0,800,600"/>
+                </Path.Data>
+            </Path>
+            
+            <Path Fill="#ededed" Stroke="Black">
+                <Path.Data>
+                    <RectangleGeometry Rect="63,187,680,60" RadiusX="15" RadiusY="15"/>
+                </Path.Data>
+            </Path>
+            
+            <Path Fill="#14151b" Stroke="Black">
+                <Path.Data>
+                    <EllipseGeometry Center="155,117" RadiusX="45" RadiusY="45"/>
+                </Path.Data>
+            </Path>
+            
+            <Path Fill="#14151b" Stroke="Black">
+                <Path.Data>
+                    <EllipseGeometry Center="405,117" RadiusX="45" RadiusY="45"/>
+                </Path.Data>
+            </Path>
+
+            <!-- Третий круг -->
+            <Path Fill="#14151b" Stroke="Black">
+                <Path.Data>
+                    <EllipseGeometry Center="660,117" RadiusX="45" RadiusY="45"/>
+                </Path.Data>
+            </Path>
+        </Canvas>
+        
+        <Canvas>
+            <!-- Статические тексты -->
+            <TextBlock Text="Correct: " FontSize="18" Foreground="#14151b" Canvas.Left="125" Canvas.Top="40"/>
+            <TextBlock Text="Missed: " FontSize="18" Foreground="#14151b" Canvas.Left="375" Canvas.Top="40"/>
+            <TextBlock Text="Accuracy: " FontSize="18" Foreground="#14151b" Canvas.Left="625" Canvas.Top="40"/>
+
+            <!-- Динамические тексты -->
+            <!-- CorrectLabel -->
+            <TextBlock x:Name="CorrectLabel"
+                       FontSize="25"
+                       Foreground="#ededed"
+                       Canvas.Left="110"  
+                       Canvas.Top="110"   
+                       Width="90"        
+                       TextAlignment="Center"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/> 
+
+            <!-- MissedLabel -->
+            <TextBlock x:Name="MissedLabel"
+                       FontSize="25"
+                       Foreground="#ededed"
+                       Canvas.Left="360"  
+                       Canvas.Top="110"    
+                       Width="90"       
+                       TextAlignment="Center"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+
+            <!-- AccuracyLabel -->
+            <TextBlock x:Name="AccuracyLabel"
+                       FontSize="25"
+                       Foreground="#ededed"
+                       Canvas.Left="620"  
+                       Canvas.Top="110"    
+                       Width="90"        
+                       TextAlignment="Center"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/> 
+        </Canvas>
+        
+        <Canvas>
+            <!-- Полоса прогресса для отображения сложности -->
+            <ProgressBar x:Name="DifficultyProgressBar"
+                         Width="600"
+                         Height="20"
+                         Canvas.Left="100"
+                         Canvas.Top="350"
+                         Minimum="0"
+                         Maximum="800"  
+                         Value="{Binding Difficulty}"  
+                         Foreground="#4CAF50">
+                <ProgressBar.Background>
+                    <SolidColorBrush Color="#E0E0E0"/> 
+                </ProgressBar.Background>
+            </ProgressBar>
+        </Canvas>
+        
+        <Canvas>
+            <TextBlock x:Name="TimeDisplayTextBlock"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Top"
+                       Margin="10"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Text="02:00"
+                       Canvas.Right="50"
+                       Canvas.Bottom="10"
+                       IsVisible="False"/>
+            <Border CornerRadius="10" 
+                    Background="White"
+                    BorderBrush="White"
+                    BorderThickness="1"
+                    Canvas.Left="50" Canvas.Top="250"
+                    Width="700" Height="50">
+            <ListBox x:Name="LettersListBox" 
+                     ItemsSource="{Binding Letters}"
+                     ZIndex="2"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center"
+                     FontSize="20"
+                     Background="Transparent"> <!-- Прозрачный фон, чтобы Border был виден -->
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <ItemsControl ItemsSource="{Binding Letters}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Character}" 
+                                               Foreground="{Binding Color, Converter={StaticResource ColorConverter}}"
+                                               xml:space="preserve"
+                                               Margin="0,0,2,0">
+                                        <TextBlock.Styles>
+                                            <Style Selector="TextBlock">
+                                                <Setter Property="MinWidth" Value="10"/>
+                                            </Style>
+                                        </TextBlock.Styles>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+        </Border>
+        </Canvas>
+        </Grid>
+          <Grid x:Name="GameOverGrid" IsVisible="False" Background="#ededed">
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Поздравление -->
+                <TextBlock Text="Congratulations!" 
+                           FontSize="36" 
+                           FontWeight="Bold" 
+                           HorizontalAlignment="Center"
+                           Grid.Row="0"
+                           Margin="0,0,0,20">
+                    <TextBlock.Styles>
+                        <Style Selector="TextBlock">
+                            <Setter Property="Effect">
+                              
+                            </Setter>
+                        </Style>
+                    </TextBlock.Styles>
+                </TextBlock>
+
+                <!-- Статистика -->
+                <StackPanel Grid.Row="1" Spacing="10" HorizontalAlignment="Center">
+                    <TextBlock x:Name="CorrectLabelText"
+                               Text="Correct: 0"
+                               Classes="statsText"/>
+                    <TextBlock x:Name="MissedLabelText"
+                               Text="Missed: 0"
+                               Classes="statsText"/>
+                    <TextBlock x:Name="AccuracyLabelText"
+                               Text="Accuracy: 0%"
+                               Classes="statsText"/>
+                </StackPanel>
+
+                <!-- Кнопка перезапуска -->
+                <Button Content="Restart" 
+                        Grid.Row="2" 
+                        Theme="{StaticResource CustomButtonTheme}"
+                        Margin="0,20,0,0"
+                        Click="RestartButton_Click">
+                    <Button.Styles>
+                        <Style Selector="Button:hover">
+                            <Setter Property="Background" Value="#388E3C"/>
+                        </Style>
+                    </Button.Styles>
+                </Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
