@@ -1,52 +1,53 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/IZZtwibl)
-# Hra - procvičování psaní na klávesnici
+# 🎮 Typing Game
 
-Vytvořte desktopovou aplikaci (Windows Forms), která bude plnit funkci hry na procvičení psaní na klávesnici. Hra bude
-generovat náhodně písmena, která se zobrazí v listboxu. Pokud hráč stiskne na klávesnici písmeno, které je
-v seznamu (na prvním nebo libovolném místě), písmeno se smaže. Pokud dojde k zaplnění listboxu, hráč
-prohrál. Postupně zvyšujte obtížnost. Zaznamenávejte statistiku, kolikrát se hráč trefil, netrefil a jaká je jeho
-celková přesnost v procentech.
+A simple desktop typing game built with **Avalonia UI**. The main goal is to improve the player's typing speed and accuracy by reacting to randomly generated characters, words, or sentences as quickly as possible.
 
-![GameForm](Resources/GameForm.png)
+---
 
-Možná další vylepšení:
-* přidat Menu s položkami - Nová hra, About, Help, ...
-* přidat Toolbar - dtto.
-* Možnost nastavit režim hry - hráč musí vybrat první znak/libovolný znak.
-* Režim slova - generována jsou celá slova (anglická/česká - z wordlistu), po stisku prvního znaku slova ho hráč musí napsat celé, 
-  není možné napsat půl slova a pak pokračovat jiným. Slovo zmizí až po napsání celého slova.
+## ✨ Features
 
-## Postup
+- 🎲 Randomly generated letters, words, and sentences.
+- 🎯 Typing a correct character removes it from the list.
+- ❌ If the list gets too full, the player loses.
+- 📈 Gradually increasing difficulty as the game progresses.
+- 📊 Real-time statistics:
+  - Number of correct inputs.
+  - Number of missed inputs.
+  - Typing accuracy (in %).
+  - Difficulty progress bar.
+- 🕹️ Multiple game modes:
+  - **Letter Mode** — random letters appear; type them before the list fills up.
+  - **Word Mode** — random words appear; type the full word correctly.
+  - **Sentence Mode** — random sentences appear; type them completely to remove them.
+- ⚙️ Adjustable difficulty settings for each mode.
 
-1. Formulář nastavte na vhodnou velikost (vizte screenshot)
-    * Zakažte změnu velikosti - **FormBorderStyle** - **FixedSingle**
-    * Zakažte maximalizaci a minimalizaci (**MaximizeBox** , **MinimizeBox**)
-2. Vložte **ListBox** do formuláře
-    * Pojmenujte jej jako _gameListBox_
-    * Nastavte vlasnosti: **Dock** - **Fill** , **MultiColumn** - **True** , **Font** - tak, aby se na celou výšku vešlo jedno písmeno
-3. Vložte **StatusStrip** do formuláře
-    * Vložte do něj (vyberte **StatusStrip** a použijte zobrazené tlačítko) prvky **StatusLabel**
-       (_correctLabel_ , _missedLabel_ , _accuracyLabel_ , _"Difficulty" label_) a progress bar (_difficultyProgressBar_).
-    * U progress baru nastavte **Maximum** = **800**
-    * U difficulty label nastavte **Spring** - **True** , **TextAlign** - **MiddleRight**
-4. Vložte **Timer** do fomuláře (_gameTimer_)
-    * Povolte ho (**Enabled** = **true**) a nastavte výchozí interval **800 ms**.
-5. Dokončete třídu _Stats_ a související delegát pro událost (projekt _GameLibrary_)
-6. Ve třídě formuláře vytvořte atributy _Random random_ a _Stats stats_. Inicializujte je.
-    * V konstruktoru formuláře vytvořte (přidejte) handler pro událost **UpdatedStats** z objektu _stats_.
-    * V metodě handleru aktualizujte hodnoty ve status baru (_correctLabel.Text_, _missedLabel.Text_, _accuracyLabel.Text_)
-7. Vytvořte událost pro _gameTimer_ - **Tick**
-    * Přidejte náhodné písmeno do _listboxu_ (_.Items.Add((Keys)random.Next(...)_). Přetypujte na
-       **Keys** pro snažší zpracování při stisku klávesy.
-    * Pokud je v _listboxu_ více než 6 položek - zastavte _timer_ , ukončete hru a vypište "Game over!" do _list boxu_.
-8. Vytvořte událost pro _gameListBox_ - **KeyDown**
-    * Zjistěte, jestli stisknutá klávesa (_e.KeyCode_) se nachází v list boxu (_.Items.Contains_).
-    * Pokud ano, odeberte prvek a zavolejte nad _listboxem.Refresh()_
-    * Zrychlete hru
-       * Pokud interval časovače je > 400, snižte ho o 60
-       * Interval > 250, snižte o 15
-       * Interval > 150, snižte o 8
-    * Vypočítejte obtížnost (pro progress bar - _.Value_) jako 800 - Interval časovače. Ošetřete
-       přetečení a podtečení přes 800 nebo 0. Nastavte novou hodnotu do progress baru.
-    * Aktualizujte statistiky (_stats.Update_, argument true, pokud se písmeno (stisknutá klávesa) nacházela v list boxu).
-    * Pokud je hra ve stavu "Game over!", stisk libovolné klávesy obnoví list box, timer a statistiky do výchozího stavu a znovu spustí hru.
+---
+
+## 📊 Tracked Statistics
+
+- ✅ Correct inputs.
+- ❌ Missed inputs.
+- 🎯 Accuracy percentage.
+- 🚀 Difficulty progress.
+
+---
+
+## 🛠️ Built With
+
+- [Avalonia UI](https://avaloniaui.net/)
+- .NET 8 (or your project's version)
+
+---
+
+## 📸 Screenshots
+![Снимок экрана 2025-05-15 в 20 07 15](https://github.com/user-attachments/assets/427fcd1c-4078-474a-a2b4-34f7ceb02b23)
+<img width="794" alt="Снимок экрана 2025-05-15 в 20 08 39" src="https://github.com/user-attachments/assets/499a4539-5351-40b9-9ca9-e0dff76f6813" />
+
+
+
+---
+
+## 📌 About
+
+This project was created as a practice typing game with customizable modes and dynamic difficulty. Perfect for improving typing skills in a fun and interactive way.
+
